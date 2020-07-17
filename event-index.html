@@ -1,0 +1,87 @@
+<html>
+<head>
+
+    <meta charset="utf-8"/>
+
+    <title>Kursarbeit</title>
+
+
+    <style>
+        body {
+            padding: 20px;
+        }
+        #console {
+            height: 450px;
+            overflow: auto;
+        }
+        .username-msg {
+            color: orange;
+        }
+
+        .connect-msg {
+            color: green;
+        }
+
+        .disconnect-msg {
+            color: red;
+        }
+
+        .send-msg {
+            color: #888
+        }
+    </style>
+
+    <script src="js/socket.io/socket.io.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:9092');
+
+        socket.on('connect', function () {
+            output('<span class="connect-msg">Client has connected to the server!</span>');
+        });
+
+        socket.on('chatevent', function (data) {
+            output('<span class="username-msg">' + data + ':</span> ');
+        });
+
+        socket.on('disconnect', function () {
+            output('<span class="disconnect-msg">The client has disconnected!</span>');
+        });
+
+        function sendDisconnect() {
+            socket.disconnect();
+        }
+
+        function sendMessage() {
+            $('#msg').val('');
+            socket.emit('getdata');
+        }
+
+        function output(message) {
+            var currentTime = "<span class='time'>" + moment().format('HH:mm:ss.SSS') + "</span>";
+            var element = $("<div>" + currentTime + " " + message + "</div>");
+            $('#console').prepend(element);
+        }
+
+        function clean() {
+            $('#console').html('')
+        }
+
+    </script>
+</head>
+
+<body>
+
+<h1>Getting data from Kafka</h1>
+<br/>
+
+<div id="console" class="well">
+</div>
+<form class="well form-inline" onsubmit="return false;">
+    <button type="button" onClick="sendDisconnect()" class="btn">Disconnect</button>
+    <button type="button" onclick="clean()" class="btn">Clean</button>
+</form>
+</body>
+
+</html>
