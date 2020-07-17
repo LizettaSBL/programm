@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru" > <!--код языка для корректного отображения символов в бразузере -->
+
+<head>
+  <meta charset="UTF-8"> <!--определяется кодировка -->
+  <title>Измерительный комплекс</title> <!--описывается заголовок документа-->
+  <link rel="stylesheet" href="css/style.css"> <!--подключение таблицы стилей -->
+  <script src="js/socket.io/socket.io.js"></script> <!--подключение javascript-->
+  <script src="js/moment.min.js"></script> <!--подключение javascript-->
+  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> <!--подключение библиотеки jQuery javascript-->
+
+</head>
+
+<body onunload="sendDisconnect()"> <!--генерация события разрыва подключения к Socket IO -->
+<script>  /*Данный элемент языка html позволяет встраивать куски кода, которые написаны на языке JavaScript, в именно подключение сервера*/
+  var socket = io.connect('http://localhost:9092'); /*создание экземляра Socket IO и подключение*/
+/*добавление слушателя соединения*/
+  socket.on('chatevent', function (data) {
+    console.log(data); /*метод log для объекта console необходим для вывода информации, в нашем случае переменной data*/
+      showSliderValue(data);
+  });
+/*вызов события. разрыв соединения*/
+  function sendDisconnect() {
+  socket.disconnect();
+  }
+</script>
+  <div class="container"> <!--создание блока и подкючение стилей через класс с именем container -->
+  <div class="titel"> <!--создание блока для вывода титула на экран и подкючение стилей через класс с именем  titel-->
+    <p>Разработка информационно-измерительного комплекса</p> <!--создание двух последовательных абзацев-->
+    <p> для промышленного предприятия</p>
+  </div>
+
+  <div class="range-slider"> <!-- зотступ между ползунком и текстом-->
+      <span id="rs-bullet" class="rs-label" >0</span> <!-- область перед ползунком-->
+      <input id="rs-range-line" class="rs-range" type="range" value="0" min="0" max="300"> <!-- линия-->
+    </div>
+
+    <div class="box-minmax"><!-- значения ползунка-->
+      <span>0</span> <!--тег позволяет описать собственный стиль для каждого элемента данного тега-->
+      <span>300</span>
+    </div>
+
+</div>
+<script  src="js/index.js"></script> <!--подключение javascript-->
+
+</body>
+
+</html>
